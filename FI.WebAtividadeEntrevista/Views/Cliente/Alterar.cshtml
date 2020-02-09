@@ -4,6 +4,8 @@
 }
 
 <h2>@Html.Raw(ViewBag.Title)</h2>
+@Html.HiddenFor(model => model.Id)
+
 @Html.Partial("Forms")
 
 
@@ -17,7 +19,7 @@
 
 
 <div id="replacetarget">
-    @Html.Partial("_EnderecosList", Model.Beneficiarios)
+    @Html.Partial("_BeneficiariosList", Model.Beneficiarios)
 </div>
 
 

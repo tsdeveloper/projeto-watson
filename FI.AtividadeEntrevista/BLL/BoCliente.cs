@@ -18,6 +18,7 @@ namespace FI.AtividadeEntrevista.BLL
             return cli.Incluir(cliente);
         }
 
+        
         /// <summary>
         /// Altera um cliente
         /// </summary>

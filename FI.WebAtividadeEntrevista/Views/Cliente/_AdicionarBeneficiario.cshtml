@@ -1,5 +1,11 @@
 ﻿@model WebAtividadeEntrevista.Models.BeneficiarioModel
 
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">
+        <span aria-hidden="true">×</span><span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title">Novo Endereço</h4>
+</div>
 
 
 @using (Html.BeginForm())
@@ -7,7 +13,7 @@
     <div class="modal-body">
         @Html.AntiForgeryToken()
 
-        <div class="form-inline">
+        <div class="form-row">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.Hidden("ClienteId", (int?)ViewBag.ClienteId)
 

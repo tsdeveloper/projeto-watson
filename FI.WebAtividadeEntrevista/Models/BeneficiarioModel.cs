@@ -11,5 +11,7 @@ namespace WebAtividadeEntrevista.Models
         [Required(ErrorMessage = "Informe o CPF", AllowEmptyStrings = false)]
         [Display(Name = "CPF")]
         public string CPF { get; set; }
+
+        public int ClienteId { get; set; }
     }
 }

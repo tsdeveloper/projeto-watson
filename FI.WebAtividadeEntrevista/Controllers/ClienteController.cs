@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using FI.AtividadeEntrevista.DML;
 using System.Text.RegularExpressions;
+using System.Web.Helpers;
 
 namespace WebAtividadeEntrevista.Controllers
 {
@@ -128,6 +129,9 @@ namespace WebAtividadeEntrevista.Controllers
             
             }
 
+            ViewBag.ClienteId = id;
+
+
             return View(model);
         }
 
@@ -160,11 +164,45 @@ namespace WebAtividadeEntrevista.Controllers
 
         [Route("adicionar-benefiario")]
 
-        public ActionResult AdicionarBeneficiario(int? id = null)
+        public ActionResult AdicionarBeneficiario(int id)
         {
             ViewBag.ClienteId = id;
-
             return PartialView("_AdicionarBeneficiario");
+        }
+
+
+        [Route("adicionar-benefiario")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult AdicionarEndereco(BeneficiarioModel beneficiarioModel)
+        {
+            var bo = new BoCliente();
+
+            if (!this.ModelState.IsValid)
+            {
+                List<string> erros = (from item in ModelState.Values
+                    from error in item.Errors
+                    select error.ErrorMessage).ToList();
+
+                Response.StatusCode = 400;
+                return Json( new
+                {
+                    erros,
+
+                });
+            }
+            else
+            {
+                
+
+                return Json(new
+                {
+                    success= true, 
+                    msg = "Cadastro alterado com sucesso"
+                });
+            }
+
+            
         }
     }
 }
