@@ -11,6 +11,13 @@ namespace FI.AtividadeEntrevista.DML
     /// </summary>
     public class Cliente
     {
+        public Cliente()
+        {
+            Beneficiarios = new List<Beneficiario>();
+        }
+
+        public ICollection<Beneficiario> Beneficiarios { get; set; }
+
         /// <summary>
         /// Id
         /// </summary>
@@ -65,5 +72,16 @@ namespace FI.AtividadeEntrevista.DML
         /// Telefone
         /// </summary>
         public string Telefone { get; set; }        
-    }    
+    }
+
+    public class Beneficiario
+    {
+        public long Id { get; set; }
+        
+        public string Nome { get; set; }
+        
+        public string CPF { get; set; }
+
+        public long IDCliente { get; set; }
+    }
 }

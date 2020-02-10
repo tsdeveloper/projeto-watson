@@ -12,6 +12,6 @@ namespace WebAtividadeEntrevista.Models
         [Display(Name = "CPF")]
         public string CPF { get; set; }
 
-        public int ClienteId { get; set; }
+        public long IDCliente { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FI.AtividadeEntrevista.DML;
 
 namespace FI.AtividadeEntrevista.BLL
 {
@@ -78,6 +79,12 @@ namespace FI.AtividadeEntrevista.BLL
         {
             DAL.DaoCliente cli = new DAL.DaoCliente();
             return cli.VerificarExistencia(CPF);
+        }
+
+        public void AdicionarBeneficiario(Beneficiario model)
+        {
+            DAL.DaoCliente cli = new DAL.DaoCliente();
+            cli.AdicionarBeneficiario(model);
         }
     }
 }

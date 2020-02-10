@@ -124,7 +124,18 @@ namespace WebAtividadeEntrevista.Controllers
                     Nome = cliente.Nome,
                     Sobrenome = cliente.Sobrenome,
                     Telefone = cliente.Telefone
+                    
                 };
+
+                foreach (var beneficiario in cliente.Beneficiarios)
+                {
+                    model.Beneficiarios.Add(new BeneficiarioModel
+                    {
+                        CPF =  beneficiario.CPF,
+                        Nome =  beneficiario.Nome,
+                        IDCliente =  beneficiario.IDCliente,
+                    });
+                }
 
             
             }
@@ -174,7 +185,7 @@ namespace WebAtividadeEntrevista.Controllers
         [Route("adicionar-benefiario")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult AdicionarEndereco(BeneficiarioModel beneficiarioModel)
+        public ActionResult AdicionarBeneficiario(BeneficiarioModel beneficiarioModel)
         {
             var bo = new BoCliente();
 
@@ -185,24 +196,55 @@ namespace WebAtividadeEntrevista.Controllers
                     select error.ErrorMessage).ToList();
 
                 Response.StatusCode = 400;
-                return Json( new
-                {
-                    erros,
-
-                });
+                return PartialView("_AdicionarBeneficiario", beneficiarioModel);
             }
             else
             {
-                
-
-                return Json(new
+                var model = new Beneficiario
                 {
-                    success= true, 
-                    msg = "Cadastro alterado com sucesso"
-                });
+                    Nome = beneficiarioModel.Nome,
+                    CPF = beneficiarioModel.CPF,
+                    IDCliente = beneficiarioModel.IDCliente,
+                };
+
+                bo.AdicionarBeneficiario(model);
+                string url = Url.Action("ListarBeneficiario", "Cliente", new { id = beneficiarioModel.IDCliente });
+                return Json(new { success = true, url = url });
+               
             }
 
             
+        }
+
+        public ActionResult ListarBeneficiario(int id)
+        {
+            var bo = new BoCliente();
+
+            ViewBag.ClienteId = id;
+            Cliente cliente = bo.Consultar(id);
+            Models.ClienteModel model = null;
+
+            if (cliente != null)
+            {
+                model = new ClienteModel()
+                {
+                    Id = cliente.Id,
+                    CEP = cliente.CEP,
+                    Cidade = cliente.Cidade,
+                    Email = cliente.Email,
+                    Estado = cliente.Estado,
+                    Logradouro = cliente.Logradouro,
+                    Nacionalidade = cliente.Nacionalidade,
+                    CPF = cliente.CPF,
+                    Nome = cliente.Nome,
+                    Sobrenome = cliente.Sobrenome,
+                    Telefone = cliente.Telefone
+                };
+
+
+            }
+            return PartialView("_BeneficiariosList", model.Beneficiarios);
+
         }
     }
 }

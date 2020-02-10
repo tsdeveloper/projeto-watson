@@ -39,6 +39,21 @@ namespace FI.AtividadeEntrevista.DAL
             return ret;
         }
 
+        internal long AdicionarBeneficiario(DML.Beneficiario beneficiario)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("Nome", beneficiario.Nome));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("CPF", beneficiario.CPF));
+            parametros.Add(new System.Data.SqlClient.SqlParameter("ClienteId", beneficiario.IDCliente));
+
+            DataSet ds = base.Consultar("FI_SP_IncBenef", parametros);
+            long ret = 0;
+            if (ds.Tables[0].Rows.Count > 0)
+                long.TryParse(ds.Tables[0].Rows[0][0].ToString(), out ret);
+            return ret;
+        }
+
         /// <summary>
         /// Inclui um novo cliente
         /// </summary>
@@ -52,7 +67,26 @@ namespace FI.AtividadeEntrevista.DAL
             DataSet ds = base.Consultar("FI_SP_ConsCliente", parametros);
             List<DML.Cliente> cli = Converter(ds);
 
-            return cli.FirstOrDefault();
+            var cliResult = cli.FirstOrDefault();
+            if (cliResult != null)
+            {
+                cliResult.Beneficiarios =  ConsultarBeneficiario(cliResult.Id);
+
+            }
+
+            return cliResult;
+        }
+
+        private List<Beneficiario> ConsultarBeneficiario(long idCliente)
+        {
+            List<System.Data.SqlClient.SqlParameter> parametros = new List<System.Data.SqlClient.SqlParameter>();
+
+            parametros.Add(new System.Data.SqlClient.SqlParameter("IDCliente", idCliente));
+            
+            DataSet ds = base.Consultar("FI_SP_PesqBeneficiario", parametros);
+            List<DML.Beneficiario> beneficiarios = ConverterBeneficiarios(ds);
+
+            return beneficiarios;
         }
 
         internal bool VerificarExistencia(string CPF)
@@ -159,6 +193,26 @@ namespace FI.AtividadeEntrevista.DAL
                     cli.Nome = row.Field<string>("Nome");
                     cli.Sobrenome = row.Field<string>("Sobrenome");
                     cli.Telefone = row.Field<string>("Telefone");
+                    lista.Add(cli);
+                }
+            }
+
+            return lista;
+        }
+
+        private List<DML.Beneficiario> ConverterBeneficiarios(DataSet ds)
+        {
+            List<DML.Beneficiario> lista = new List<DML.Beneficiario>();
+            if (ds != null && ds.Tables != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow row in ds.Tables[0].Rows)
+                {
+                    var cli = new DML.Beneficiario();
+                    cli.Id = row.Field<long>("Id");
+                    cli.IDCliente = row.Field<long>("IDCliente");
+                    cli.CPF = row.Field<string>("CPF");
+                    cli.Nome = row.Field<string>("Nome");
+                    
                     lista.Add(cli);
                 }
             }

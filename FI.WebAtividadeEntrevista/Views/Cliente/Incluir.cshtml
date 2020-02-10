@@ -3,12 +3,19 @@
     ViewBag.Title = "Cadastrar Cliente";
 }
 <div class="row">
-<h2>@Html.Raw(ViewBag.Title)</h2>
+    <h2>@Html.Raw(ViewBag.Title)</h2>
 
 </div>
 @Html.Partial("Forms")
 
 
+<div id="myModal" class="modal fade in">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div id="myModalContent"></div>
+        </div>
+    </div>
+</div>
 
 
 @section scripts{
@@ -16,7 +23,7 @@
         var urlPost = '@Url.Action("Incluir", "Cliente", new { area = "" })';
     </script>
     @Scripts.Render("~/bundles/clientes")
-    
+
     <script>
         $(function () {
             $.ajaxSetup({ cache: false });
@@ -54,5 +61,5 @@
             });
         }
     </script>
-    
+
 }
